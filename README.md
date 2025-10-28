@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="./ProjectPort_Logo.svg" alt="ProjectPort Logo" width="120" />
+  <img src="./ProjectPort_Logo.svg" alt="ProjectPort Logo" width="180" />
 </p>
 
 <h1 align="center">🚀 ProjectPort — Order. Track. Deliver.</h1>
