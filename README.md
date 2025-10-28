@@ -50,8 +50,8 @@ It lets clients explore project types, auto-generate quotations, and place order
 ### 📸 Screenshots
 
 <p align="center">
-  <img src="./screenshots/TDC_Client.png" alt="Client Page" width="700"/><br/>
-  <img src="./screenshots/TDS_Landing.png" alt="Landing Page" width="700"/>
+  <img src="./clientConsole.png" alt="Client Page" width="700"/><br/>
+  <img src="./landing.png" alt="Landing Page" width="700"/>
 </p>
 
 ---
