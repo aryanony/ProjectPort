@@ -1,7 +1,4 @@
-<<<<<<< HEAD
-429: Too Many Requests
-For more on scraping GitHub and how it may affect your rights, please review our Terms of Service (https://docs.github.com/en/site-policy/github-terms/github-terms-of-service).
-=======
+
 <p align="center">
   <img src="./ProjectPort_Logo.svg" alt="ProjectPort Logo" width="180" />
 </p>
@@ -67,4 +64,4 @@ It lets clients explore project types, auto-generate quotations, and place order
 cd client
 npm install
 npm run dev
->>>>>>> f9128a77e9fa1acfe960c5d0289b59bd66085485
+
