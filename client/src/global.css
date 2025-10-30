@@ -1,0 +1,136 @@
+@import "tailwindcss";
+
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Montserrat:wght@600;700&display=swap");
+
+
+/* -------start------------- */
+@theme {
+  /* === FONTS === */
+  --font-heading: 'Montserrat', sans-serif;  /*  ✓ font-heading   */                  
+  --font-body: 'Inter', sans-serif;           /*  ✓ font-body   */  
+  
+  /* === FONT SIZE + WEIGHT === */
+  --text-xl: 30px;    /*  ✓ text-xl   */  
+  --text-l: 24px;    /*  ✓ text-l   */ 
+  --text-md: 20px;    /*  ✓ text-md   */
+  --text-base: 16px;    /*  ✓ text-base   */
+  --text-nm: 15px;    /*  ✓ text-nm   */
+  --text-sm: 14px;    /*  ✓ text-sm   */
+
+  --font-weight-xl: 700;   /*  ✓ font-xl   */
+  --font-weight-lg: 600;   /*  ✓ font-lg   */
+  --font-weight-md: 500;   /*  ✓ font-md   */
+  --font-weight-base: 400;   /*  ✓ font-base   */
+
+  /* === COLORS === */
+  --color-primary: #126b64;   /*  ✓ bg-primary   */
+  --color-secondary: #f44142;   /*  ✓ bg-secondary   */
+  --color-accent2: #0b293c;   /*  ✓ bg-accent2  */
+  --color-tx-main: #1E1E2F;   /*  ✓ text-tx-main   */
+  --color-tx-muted: #6B7280;    /*  ✓ text-tx-muted   */
+  --color-success: #10B981;   /*  ✓ bg-success   */
+  --color-success-bg: #D1FAE5;
+  --color-warning: #F59E0B;   /*  ✓ bg-warning   */
+  --color-warning-bg: #FEF9C3;
+  --color-error: #E03E3E;   /*  ✓ bg-error   */
+  --color-error-bg: #FEE2E2;
+  --color-pending: #6B7280;    /* text → same as your muted grey */
+  --color-pending-bg: #E5E7EB; /* bg → light neutral grey */
+  --color-bg-main: #F5F7FA;   /*  ✓ bg-bg-main   */
+  --color-bg-card: #FFFFFF;   /*  ✓ bg-bg-card   */
+  --color-border: #E0E4EA;    /*  ✓ bg-border   */
+  --color-shadow: rgba(0,0,0,0.08);   /*  ✓ bg-shadow , shadow-shadow  */
+  --btn-gradient: linear-gradient(90deg, #0e5952 6%, #d63a3a);
+
+}
+  /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+  :root{
+/* === FONTS === */
+  --font-heading: 'Montserrat', sans-serif;
+  --font-body: 'Inter', sans-serif;
+
+  /* === FONT SIZE + WEIGHT === */
+  --text-xl: 30px;
+  --text-l: 24px;    /*  ✓ text-l   */ 
+  --text-md: 20px;
+  --text-base: 16px;
+  --text-nm: 15px;    /*  ✓ text-nm   */
+  --text-sm: 14px;
+
+  --font-weight-xl: 700;
+  --font-weight-lg: 600;
+  --font-weight-md: 500;
+  --font-weight-base: 400;
+
+  /* === COLORS === */
+  --color-primary: #126b64;
+  --color-secondary: #f44142;
+  --color-accent2: #0b293c;
+  --color-tx-main: #1E1E2F;
+  --color-tx-muted: #6B7280;
+  --color-success: #10B981;
+  --color-success-bg: #D1FAE5;
+  --color-warning: #F59E0B;
+  --color-warning-bg: #FEF9C3;
+  --color-error: #E03E3E;
+  --color-error-bg: #FEE2E2;
+  --color-pending: #6B7280;    /* text → same as your muted grey */
+  --color-pending-bg: #E5E7EB; /* bg → light neutral grey */
+  --color-bg-main: #F5F7FA;
+  --color-bg-card: #FFFFFF;
+  --color-border: #E0E4EA;
+  --color-shadow: rgba(0,0,0,0.08);
+  --btn-gradient: linear-gradient(90deg, #0e5952 6%, #d63a3a);
+
+}
+/* --------end---------------- */
+
+
+
+/* reff  */
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Brand Palette */
+    --color-primary: #126b64; /* main brand teal */
+    --color-primary-hover: #0e5952;
+    --color-secondary: #f44142; /* accent coral */
+    --color-secondary-hover: #d63a3a;
+    --color-text-heading: #0b293c; /* heading text navy */
+    --color-text-body: #374151; /* neutral gray */
+    --color-bg-light: #f5f7fa; /* background cards */
+    --color-bg-white: #ffffff;
+    --color-border: #e5e7eb;
+
+    /* Feedback & State Colors */
+    --color-success: #16a34a;
+    --color-warning: #facc15;
+    --color-error: #dc2626;
+
+    /* Shadow & Opacity */
+    --shadow-soft: 0 2px 6px rgba(0, 0, 0, 0.06);
+    --shadow-medium: 0 4px 10px rgba(0, 0, 0, 0.08);
+  }
+
+  body {
+    @apply bg-[var(--color-bg-light)] text-[var(--color-text-body)];
+    font-family: 'Inter', sans-serif;
+  }
+
+  h1, h2, h3, h4, h5 {
+    @apply text-[var(--color-text-heading)];
+    font-family: 'Montserrat', sans-serif;
+  }
+
+  a, Link {
+    @apply text-[var(--color-primary)] hover:text-[var(--color-secondary)] transition-colors;
+  }
+
+  button {
+    @apply transition-all duration-200;
+  }
+}
