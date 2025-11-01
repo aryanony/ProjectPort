@@ -24,6 +24,13 @@ async function apiFetch(path, opts = {}) {
   return res.json().catch(() => ({}));
 }
 
+export async function submitLead(payload) {
+  return apiFetch("/leads", {
+    method: "POST",
+    body: JSON.stringify(payload),
+  });
+}
+
 export async function submitProject(payload) {
   return apiFetch("/projects", {
     method: "POST",

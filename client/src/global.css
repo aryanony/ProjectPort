@@ -2,6 +2,7 @@
 
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Montserrat:wght@600;700&display=swap");
 
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 
 /* -------start------------- */
 @theme {
@@ -25,7 +26,7 @@
   /* === COLORS === */
   --color-primary: #126b64;   /*  ✓ bg-primary   */
   --color-secondary: #f44142;   /*  ✓ bg-secondary   */
-  --color-accent2: #0b293c;   /*  ✓ bg-accent2  */
+  --color-accent2: #0b293c;   /*  ✓ bg-accent2, Heading Text  */
   --color-tx-main: #1E1E2F;   /*  ✓ text-tx-main   */
   --color-tx-muted: #6B7280;    /*  ✓ text-tx-muted   */
   --color-success: #10B981;   /*  ✓ bg-success   */
@@ -118,19 +119,197 @@
 
   body {
     @apply bg-[var(--color-bg-light)] text-[var(--color-text-body)];
-    font-family: 'Inter', sans-serif;
+    font-family: 'Inter', sans-serif !important;
   }
 
-  h1, h2, h3, h4, h5 {
+  h1, h2, h3, h4, h5, h6 {
     @apply text-[var(--color-text-heading)];
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'Montserrat', sans-serif !important;
   }
 
   a, Link {
-    @apply text-[var(--color-primary)] hover:text-[var(--color-secondary)] transition-colors;
+    @apply text-[var(--color-primary)] hover:text-[var(--color-secondary)] transition-colors; 
   }
 
   button {
-    @apply transition-all duration-200;
+    @apply transition-all duration-200 !important;
+  }
+}
+button, Link, a, [role="button"], select, .cursor-pointer {
+  cursor: pointer !important;
+}
+button,
+Link,
+a,
+input,
+select,
+textarea {
+  transition: all 0.3s ease !important;
+}
+
+button:not(:disabled):hover {
+  transform: translateY(-2px) !important;
+  box-shadow: var(--shadow-md) !important;
+}
+button:not(:disabled):active {
+  transform: translateY(0) !important;
+}
+
+/* Input focus effects */
+input:focus,
+select:focus,
+textarea:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(18, 107, 100, 0.1);
+}
+
+/* Card hover effects */
+.hover-card {
+  transition: all 0.3s ease;
+}
+
+.hover-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+}
+
+/* Status badge styles */
+.badge-pending {
+  background-color: var(--color-pending-bg);
+  color: var(--color-pending);
+}
+
+.badge-success {
+  background-color: var(--color-success-bg);
+  color: var(--color-success);
+}
+
+.badge-warning {
+  background-color: var(--color-warning-bg);
+  color: var(--color-warning);
+}
+
+.badge-error {
+  background-color: var(--color-error-bg);
+  color: var(--color-error);
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-bg-main);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-tx-muted);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-primary);
+}
+
+/* Animation classes */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.animate-slide-in {
+  animation: slideIn 0.4s ease-out;
+}
+
+/* Pulse animation for notifications */
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+.animate-pulse {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Loading spinner */
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
+
+/* Utility classes */
+.text-gradient {
+  background: var(--btn-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.bg-gradient {
+  background: var(--btn-gradient);
+}
+
+/* Table hover effects */
+table tr:hover {
+  background-color: var(--color-bg-main);
+  transition: background-color 0.2s ease;
+}
+
+/* Modal backdrop */
+.modal-backdrop {
+  backdrop-filter: blur(4px);
+  transition: backdrop-filter 0.3s ease;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  :root {
+    --text-xl: 24px;
+    --text-l: 20px;
+    --text-md: 18px;
+  }
+}
+
+/* Print styles */
+@media print {
+  body {
+    background: white;
+  }
+  
+  .no-print {
+    display: none !important;
   }
 }

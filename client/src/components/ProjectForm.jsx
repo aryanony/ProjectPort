@@ -1,8 +1,7 @@
-// src/components/ProjectForm.jsx
+// src/components/ProjectForm.jsx - FIXED VERSION
 import React, { useEffect, useMemo, useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { calculateEstimate, getPriceRangeForType, getTypeLabel, availableAddOns } from "../utils/priceEngine";
-import { submitProject } from "../utils/api";
 import jsPDF from "jspdf";
 
 const Chip = ({ children, active, onClick }) => (
@@ -15,15 +14,13 @@ const Chip = ({ children, active, onClick }) => (
     </button>
 );
 
-export default function ProjectForm({ typeKey, onSubmitComplete, onEstimateChange, onMetaUpdate }) {
+export default function ProjectForm({ typeKey, onSubmitComplete, onEstimateChange, onMetaUpdate, isLead = false }) {
     const { register, handleSubmit, control, watch, setValue, reset, formState: { errors } } = useForm({
         defaultValues: {
-            // client info
             name: "",
             email: "",
             phone: "",
             company: "",
-            // project
             projectName: "",
             description: "",
             techStack: "",
@@ -41,7 +38,6 @@ export default function ProjectForm({ typeKey, onSubmitComplete, onEstimateChang
     const [submitting, setSubmitting] = useState(false);
     const watchAll = watch();
 
-    // suggested budget range from engine
     useEffect(() => {
         if (!typeKey) return;
         const [min, max] = getPriceRangeForType(typeKey);
@@ -57,7 +53,6 @@ export default function ProjectForm({ typeKey, onSubmitComplete, onEstimateChang
         setValue("techStack", stacks[typeKey] || "");
     }, [typeKey, setValue]);
 
-    // tech options
     const techOptions = useMemo(() => {
         const map = {
             portfolio: ["React", "Next.js", "Gatsby"],
@@ -74,18 +69,10 @@ export default function ProjectForm({ typeKey, onSubmitComplete, onEstimateChang
     const addonList = Object.entries(availableAddOns).map(([k, v]) => ({ key: k, label: v.label }));
 
     const moduleOptions = [
-        "Authentication",
-        "Admin Panel",
-        "Payments",
-        "Product Management",
-        "Analytics",
-        "Notifications",
-        "Multi-language",
-        "Integrations (3rd-party)",
-        "User Dashboard"
+        "Authentication", "Admin Panel", "Payments", "Product Management",
+        "Analytics", "Notifications", "Multi-language", "Integrations (3rd-party)", "User Dashboard"
     ];
 
-    // compute estimate (pure) whenever inputs change
     const estimate = useMemo(() => {
         if (!typeKey) return {};
         return calculateEstimate({
@@ -97,7 +84,6 @@ export default function ProjectForm({ typeKey, onSubmitComplete, onEstimateChang
         });
     }, [watchAll.addons, watchAll.techStack, watchAll.modules, typeKey]);
 
-    // notify parent when estimate changes
     useEffect(() => {
         try {
             onEstimateChange?.(estimate);
@@ -106,14 +92,21 @@ export default function ProjectForm({ typeKey, onSubmitComplete, onEstimateChang
         }
     }, [estimate, onEstimateChange]);
 
-    // notify parent when projectName changes
     useEffect(() => {
         if (onMetaUpdate) {
-            onMetaUpdate({ projectName: watchAll.projectName || "" });
+            onMetaUpdate({
+                projectName: watchAll.projectName || "",
+                description: watchAll.description || "",
+                techStack: watchAll.techStack || "",
+                typeLabel: getTypeLabel(typeKey),
+                estimatedTimeWeeks: watchAll.estimatedTimeWeeks || 4,
+                modules: watchAll.modules || [],
+                resources: watchAll.resources || [],
+                addons: watchAll.addons || []
+            });
         }
-    }, [watchAll.projectName, onMetaUpdate]);
+    }, [watchAll.projectName, watchAll.description, watchAll.techStack, watchAll.estimatedTimeWeeks, watchAll.modules, watchAll.resources, watchAll.addons]);
 
-    // the async submit handler that calls the backend
     const onSubmit = async (data) => {
         const payload = {
             ...data,
@@ -124,7 +117,7 @@ export default function ProjectForm({ typeKey, onSubmitComplete, onEstimateChang
             status: "Submitted"
         };
 
-        // optionally generate PDF (client-side) before sending
+        // Generate PDF if requested
         if (data.wantQuotationEmail) {
             try {
                 const doc = new jsPDF({ unit: "pt", format: "a4" });
@@ -138,29 +131,61 @@ export default function ProjectForm({ typeKey, onSubmitComplete, onEstimateChang
                 doc.text(`Estimate: ₹ ${estimate.final?.toLocaleString() || 0}`, 40, 170);
                 const deliverables = (estimate.addonsApplied || []).map((a) => a.label).join(", ");
                 doc.text(`Deliverables: ${deliverables || "-"}`, 40, 190);
-                // Save PDF locally for the user (non-blocking)
                 doc.save(`${(data.projectName || "quotation").replace(/\s+/g, "_")}.pdf`);
             } catch (e) {
                 console.error("PDF generation failed:", e);
-                // continue: don't block submission
             }
         }
 
-        // send to server
         setSubmitting(true);
+
         try {
-            const resp = await submitProject(payload);
-            // resp should be the JSON returned by server (we expect { ok:true, project: {...} })
-            const projectRecord = resp?.project ?? resp;
-            onSubmitComplete?.(projectRecord);
-            alert("Project submitted and saved to server ✅");
-            // clear the form (optional) — you can remove reset() if you prefer to keep inputs
-            reset();
+            // If isLead is true, submit to leads API (no authentication)
+            if (isLead) {
+                const res = await fetch('http://localhost:4000/api/leads', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                const result = await res.json();
+
+                if (result.ok) {
+                    onSubmitComplete?.(result);
+                    reset();
+                } else {
+                    throw new Error(result.error || 'Failed to submit inquiry');
+                }
+            } else {
+                // Submit to projects API (authenticated)
+                const token = localStorage.getItem('token');
+                if (!token) {
+                    alert('Please login first');
+                    return;
+                }
+
+                const res = await fetch('http://localhost:4000/api/projects', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify(payload)
+                });
+
+                const result = await res.json();
+
+                if (result.ok) {
+                    onSubmitComplete?.(result);
+                    alert("Project submitted successfully! ✅");
+                    reset();
+                } else {
+                    throw new Error(result.error || 'Failed to submit project');
+                }
+            }
         } catch (err) {
-            console.error("submitProject failed", err);
-            // if err has message from API, show it
-            const msg = err?.message || (err?.toString && err.toString()) || "Failed to submit project";
-            alert(`Failed to submit: ${msg}`);
+            console.error("Submit error:", err);
+            alert(`Failed to submit: ${err.message}`);
         } finally {
             setSubmitting(false);
         }
@@ -169,7 +194,6 @@ export default function ProjectForm({ typeKey, onSubmitComplete, onEstimateChang
     return (
         <form onSubmit={handleSubmit(onSubmit)} className="bg-[var(--color-bg-card)] p-6 rounded-lg border border-[var(--color-border)] shadow-sm">
             <div className="grid md:grid-cols-2 gap-4">
-                {/* CLIENT INFO */}
                 <div>
                     <label className="block text-[var(--text-sm)] font-[var(--font-heading)]">Full Name <span className="text-red-500">*</span></label>
                     <input {...register("name", { required: "Name is required" })} className="mt-2 w-full rounded-md border border-[var(--color-border)] p-3 focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)]" />
@@ -318,7 +342,6 @@ export default function ProjectForm({ typeKey, onSubmitComplete, onEstimateChang
                     </div>
                 </div>
 
-                {/* live estimate box */}
                 <div className="rounded-md border border-[var(--color-border)] p-4 bg-[var(--color-bg-main)]">
                     <div className="flex items-center justify-between">
                         <div>
@@ -334,27 +357,12 @@ export default function ProjectForm({ typeKey, onSubmitComplete, onEstimateChang
                 </div>
 
                 <div className="flex items-center gap-3">
-                    <button type="submit" disabled={submitting} className={`px-6 py-3 ${submitting ? "bg-[var(--color-bg-card)] text-[var(--color-tx-muted)]" : "bg-[var(--color-primary)] text-white"} rounded-md cursor-pointer`}>
-                        {submitting ? "Submitting..." : "Submit Project"}
+                    <button type="submit" disabled={submitting} className={`px-6 py-3 ${submitting ? "bg-gray-400 text-white cursor-not-allowed" : "bg-[var(--color-primary)] text-white hover:bg-[var(--color-primary-hover)]"} rounded-md transition`}>
+                        {submitting ? "Submitting..." : (isLead ? "Submit Inquiry" : "Submit Project")}
                     </button>
-                    <button type="button" onClick={() => window.location.reload()} className="px-4 py-2 border border-[var(--color-border)] rounded-md cursor-pointer">Reset</button>
-                    <button type="button" onClick={() => {
-                        // quick download the quote (same as submit PDF but not saving)
-                        try {
-                            const doc = new jsPDF({ unit: "pt", format: "a4" });
-                            doc.setFontSize(14);
-                            doc.text("Quick Quote", 40, 60);
-                            doc.setFontSize(11);
-                            doc.text(`Client: ${watchAll.name || "-"}`, 40, 90);
-                            doc.text(`Project: ${watchAll.projectName || "-"}`, 40, 110);
-                            doc.text(`Type: ${getTypeLabel(typeKey)}`, 40, 130);
-                            doc.text(`Estimate: ₹ ${estimate.final?.toLocaleString() || 0}`, 40, 150);
-                            doc.save(`${(watchAll.projectName || "quote").replace(/\s+/g, "_")}_quick.pdf`);
-                        } catch (e) {
-                            console.error("Quick quote failed:", e);
-                            alert("Quick quote generation failed. Check console for details.");
-                        }
-                    }} className="px-4 py-2 border border-[var(--color-border)] rounded-md cursor-pointer">Download Quick Quote</button>
+                    <button type="button" onClick={() => reset()} className="px-4 py-2 border border-[var(--color-border)] rounded-md hover:bg-gray-50 transition">
+                        Reset
+                    </button>
                 </div>
             </div>
         </form>
