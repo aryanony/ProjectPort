@@ -132,7 +132,7 @@
   }
 
   button {
-    @apply transition-all duration-200 !important;
+    @apply transition-all duration-200;
   }
 }
 button, Link, a, [role="button"], select, .cursor-pointer {
