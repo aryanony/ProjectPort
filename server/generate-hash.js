@@ -1,4 +1,4 @@
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 
 async function generateHash() {
     const adminHash = await bcrypt.hash('#admin@ProjectPort', 10);
