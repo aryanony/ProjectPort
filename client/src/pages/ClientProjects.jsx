@@ -9,7 +9,7 @@ const ClientProjects = ({ user }) => {
 
     useEffect(() => {
         const token = localStorage.getItem('token');
-        fetch('http://localhost:4000/api/projects', {
+        fetch('https://projectport-8w1j.onrender.com/api/projects', {
             headers: { 'Authorization': `Bearer ${token}` }
         })
             .then(r => r.json())

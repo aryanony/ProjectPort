@@ -13,15 +13,15 @@ const ClientDashboard = ({ user }) => {
         const token = localStorage.getItem('token');
 
         Promise.all([
-            fetch('http://localhost:4000/api/dashboard/stats', {
+            fetch('https://projectport-8w1j.onrender.com/api/dashboard/stats', {
                 headers: { 'Authorization': `Bearer ${token}` }
             }).then(r => r.json()),
 
-            fetch('http://localhost:4000/api/projects', {
+            fetch('https://projectport-8w1j.onrender.com/api/projects', {
                 headers: { 'Authorization': `Bearer ${token}` }
             }).then(r => r.json()),
 
-            fetch('http://localhost:4000/api/notifications', {
+            fetch('https://projectport-8w1j.onrender.com/api/notifications', {
                 headers: { 'Authorization': `Bearer ${token}` }
             }).then(r => r.json())
         ])

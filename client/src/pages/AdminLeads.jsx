@@ -23,7 +23,7 @@ const AdminLeads = ({ user }) => {
     const loadLeads = () => {
         setLoading(true);
         const token = localStorage.getItem('token');
-        fetch('http://localhost:4000/api/leads', {
+        fetch('https://projectport-8w1j.onrender.com/api/leads', {
             headers: { 'Authorization': `Bearer ${token}` }
         })
             .then(r => r.json())
@@ -62,7 +62,7 @@ const AdminLeads = ({ user }) => {
         const token = localStorage.getItem('token');
 
         try {
-            const res = await fetch(`http://localhost:4000/api/leads/${selectedLead.id}/convert`, {
+            const res = await fetch(`https://projectport-8w1j.onrender.com/api/leads/${selectedLead.id}/convert`, {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${token}`,
@@ -98,7 +98,7 @@ const AdminLeads = ({ user }) => {
 
         const token = localStorage.getItem('token');
         try {
-            const res = await fetch(`http://localhost:4000/api/leads/${leadId}`, {
+            const res = await fetch(`https://projectport-8w1j.onrender.com/api/leads/${leadId}`, {
                 method: 'DELETE',
                 headers: { 'Authorization': `Bearer ${token}` }
             });
@@ -118,7 +118,7 @@ const AdminLeads = ({ user }) => {
 
         const token = localStorage.getItem('token');
         try {
-            const res = await fetch(`http://localhost:4000/api/leads/${leadId}/reject`, {
+            const res = await fetch(`https://projectport-8w1j.onrender.com/api/leads/${leadId}/reject`, {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${token}`,

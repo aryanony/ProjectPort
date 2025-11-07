@@ -17,7 +17,7 @@ const Login = ({ setUser }) => {
         setLoading(true);
 
         try {
-            const res = await fetch('http://localhost:4000/api/auth/login', {
+            const res = await fetch('https://projectport-8w1j.onrender.com/api/auth/login', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ email, password })
@@ -152,12 +152,12 @@ const Login = ({ setUser }) => {
                     <div className="mt-8 pt-6 border-t border-[var(--color-border)]">
                         <div className="text-center">
                             <p className="text-xs text-[var(--color-tx-muted)] font-medium mb-3">Demo Credentials:</p>
-                            <div className="grid grid-cols-2 gap-3">
-                                <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
+                            <div className="grid grid-cols-1 gap-3">
+                                {/* <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
                                     <p className="text-xs font-medium text-blue-900 mb-1">Admin Access</p>
                                     <p className="text-xs text-blue-700 font-mono">admin@projectport.com</p>
                                     <p className="text-xs text-blue-700 font-mono">admin123</p>
-                                </div>
+                                </div> */}
                                 <div className="bg-green-50 border border-green-200 rounded-lg p-3">
                                     <p className="text-xs font-medium text-green-900 mb-1">Client Access</p>
                                     <p className="text-xs text-green-700 font-mono">client@gmail.com</p>

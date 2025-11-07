@@ -10,7 +10,7 @@ const app = express();
 const PORT = process.env.PORT || 4000;
 
 // middlewares
-app.use(cors({ origin: "http://localhost:5173" })); // allow your dev frontend
+app.use(cors({ origin: "https://projectsport.vercel.app/" })); // allow your dev frontend
 app.use(express.json({ limit: "1mb" })); // parse JSON bodies
 
 // small health check
@@ -152,5 +152,5 @@ function tryParseJSON(val) {
 }
 
 app.listen(PORT, () => {
-  console.log(`Server listening on http://localhost:${PORT}`);
+  console.log(`Server listening on https://projectsport:${PORT}`);
 });

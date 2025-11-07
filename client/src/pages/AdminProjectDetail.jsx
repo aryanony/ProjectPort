@@ -30,7 +30,7 @@ const AdminProjectDetail = ({ user }) => {
 
     const loadProject = () => {
         const token = localStorage.getItem('token');
-        fetch(`http://localhost:4000/api/projects/${id}`, {
+        fetch(`https://projectport-8w1j.onrender.com/api/projects/${id}`, {
             headers: { 'Authorization': `Bearer ${token}` }
         })
             .then(r => r.json())
@@ -54,7 +54,7 @@ const AdminProjectDetail = ({ user }) => {
 
         const token = localStorage.getItem('token');
         try {
-            const res = await fetch(`http://localhost:4000/api/projects/${id}`, {
+            const res = await fetch(`https://projectport-8w1j.onrender.com/api/projects/${id}`, {
                 method: 'PATCH',
                 headers: {
                     'Authorization': `Bearer ${token}`,
@@ -76,7 +76,7 @@ const AdminProjectDetail = ({ user }) => {
         e.preventDefault();
         const token = localStorage.getItem('token');
 
-        const res = await fetch(`http://localhost:4000/api/projects/${id}/milestones`, {
+        const res = await fetch(`https://projectport-8w1j.onrender.com/api/projects/${id}/milestones`, {
             method: 'POST',
             headers: {
                 'Authorization': `Bearer ${token}`,
@@ -95,7 +95,7 @@ const AdminProjectDetail = ({ user }) => {
         e.preventDefault();
         const token = localStorage.getItem('token');
 
-        const res = await fetch(`http://localhost:4000/api/projects/${id}/updates`, {
+        const res = await fetch(`https://projectport-8w1j.onrender.com/api/projects/${id}/updates`, {
             method: 'POST',
             headers: {
                 'Authorization': `Bearer ${token}`,
@@ -112,7 +112,7 @@ const AdminProjectDetail = ({ user }) => {
 
     const updateMilestoneStatus = async (milestoneId, status) => {
         const token = localStorage.getItem('token');
-        await fetch(`http://localhost:4000/api/milestones/${milestoneId}`, {
+        await fetch(`https://projectport-8w1j.onrender.com/api/milestones/${milestoneId}`, {
             method: 'PATCH',
             headers: {
                 'Authorization': `Bearer ${token}`,

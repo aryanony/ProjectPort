@@ -956,6 +956,6 @@ app.use((err, req, res, next) => {
 });
 
 app.listen(PORT, () => {
-  console.log(`✅ ProjectPort API running on http://localhost:${PORT}`);
+  console.log(`✅ ProjectPort API running on http://projectsport:${PORT}`);
   console.log(`📡 CORS enabled for: ${CLIENT_ORIGIN}`);
 });

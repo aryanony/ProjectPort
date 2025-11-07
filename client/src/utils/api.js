@@ -1,5 +1,5 @@
 // client/src/utils/api.js
-const BASE = import.meta.env.VITE_API_BASE || "http://localhost:4000/api";
+const BASE = import.meta.env.VITE_API_BASE || "https://projectport-8w1j.onrender.com/api";
 
 async function apiFetch(path, opts = {}) {
   const url = BASE.replace(/\/$/, "") + path;
