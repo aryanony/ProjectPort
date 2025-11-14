@@ -53,6 +53,11 @@ It lets clients explore project types, auto-generate quotations, and place order
 <p align="center">
   <img src="./landing.png" alt="Landing Page" width="700"/><br/>
   <img src="./clientConsole.png" alt="Client Page" width="700"/><br/>
+  <img src="./lead.png" alt="Project Inquiry" width="700"/><br/>
+  <img src="./projectPort_admin.png" alt="Admin Dashboard" width="700"/><br/>
+  <img src="./admin_projects.png" alt="Project Details" width="700"/><br/>
+  <img src="./client_pannel.png" alt="Client Dashboard" width="700"/><br/>
+  <img src="./client_project.png" alt="Client Project" width="700"/><br/>
 </p>
 
 ---
