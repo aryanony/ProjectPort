@@ -24,8 +24,8 @@
   --font-weight-base: 400;   /*  ✓ font-base   */
 
   /* === COLORS === */
-  --color-primary: #126b64;   /*  ✓ bg-primary   */
-  --color-secondary: #f44142;   /*  ✓ bg-secondary   */
+  --color-primary: #126b64;   /*  ✓ bg-primary bg-se   */
+  --color-secondary: #f44142;   /*  ✓condary   */
   --color-accent2: #0b293c;   /*  ✓ bg-accent2, Heading Text  */
   --color-tx-main: #1E1E2F;   /*  ✓ text-tx-main   */
   --color-tx-muted: #6B7280;    /*  ✓ text-tx-muted   */

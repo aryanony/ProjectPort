@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { FolderKanban } from 'lucide-react';
+import { FolderKanban, Plus, ArrowLeft } from 'lucide-react';
 
 const ClientProjects = ({ user }) => {
     const [projects, setProjects] = useState([]);
@@ -46,14 +46,22 @@ const ClientProjects = ({ user }) => {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.5 }}
                 >
+                    <Link
+                        to="/client"
+                        className="inline-flex items-center gap-2 text-[var(--color-primary)] hover:underline mb-6"
+                    >
+                        <ArrowLeft className="w-4 h-4" />
+                        Back to Projects
+                    </Link>
                     <div className="flex items-center justify-between mb-8">
                         <h1 className="text-[32px] font-[var(--font-heading)] font-[var(--font-weight-lg)] text-[var(--color-accent2)]">
                             My Projects
                         </h1>
                         <Link
                             to="/start-project"
-                            className="px-6 py-3 bg-[var(--color-primary)] text-white rounded-lg hover:bg-[var(--color-primary-hover)] transition"
+                            className="flex gap-2 item-center px-6 py-3 bg-[var(--color-primary)] text-white rounded-lg hover:bg-[var(--color-primary-hover)] transition"
                         >
+                            <Plus className="w-5 h-5" />
                             New Project
                         </Link>
                     </div>

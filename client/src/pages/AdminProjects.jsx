@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Search } from 'lucide-react';
+import { Search, ArrowLeft } from 'lucide-react';
 
 const AdminProjects = ({ user }) => {
     const [projects, setProjects] = useState([]);
@@ -52,7 +52,17 @@ const AdminProjects = ({ user }) => {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.5 }}
                 >
+                    <div>
+                        <Link
+                            to="/admin"
+                            className="inline-flex items-center gap-2 text-[var(--color-primary)] hover:text-[var(--color-secondary)] transition mb-4"
+                        >
+                            <ArrowLeft className="w-4 h-4" />
+                            Back to Dashboard
+                        </Link>
+                    </div>
                     <div className="flex items-center justify-between mb-8">
+
                         <h1 className="text-[32px] font-[var(--font-heading)] font-[var(--font-weight-lg)] text-[var(--color-accent2)]">
                             All Projects
                         </h1>

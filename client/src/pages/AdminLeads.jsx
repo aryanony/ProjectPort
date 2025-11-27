@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Users, Mail, Phone, Building, Calendar, CheckCircle, X, Eye, User, ArrowLeft, Trash2, XCircle, Copy, Check } from 'lucide-react';
+import { Users, Mail, Phone, Building, Calendar, CheckCircle, X, Eye, User, ArrowLeft, Trash2, XCircle, Copy, Check, AlertTriangle } from 'lucide-react';
 
 const AdminLeads = ({ user }) => {
     const [leads, setLeads] = useState([]);
@@ -32,6 +32,7 @@ const AdminLeads = ({ user }) => {
             })
             .catch(err => {
                 console.error('Failed to load leads:', err);
+                setError('Failed to load leads');
             })
             .finally(() => setLoading(false));
     };
@@ -77,24 +78,40 @@ const AdminLeads = ({ user }) => {
                 setGeneratedCredentials({
                     email: data.user.email,
                     password: data.user.password,
-                    name: data.user.full_name
+                    name: data.user.full_name,
+                    projectId: data.project.id,
+                    projectName: data.project.name
                 });
-                setSuccess(`Client account created successfully!`);
-                loadLeads();
-                // Don't close modal immediately, show credentials
+                setSuccess(`✅ Client account created successfully!`);
+                loadLeads(); // Reload leads to update status
             } else {
-                setError(data.error || 'Failed to convert lead');
+                // Handle specific error cases
+                if (data.existingUser) {
+                    setError(`⚠️ Cannot convert: A ${data.existingUser.role} account already exists with this email (${data.existingUser.full_name}). 
+                    
+Options:
+1. Ask the lead to provide a different email
+2. Delete the existing user account first (if appropriate)
+3. Contact the existing user directly`);
+                } else if (data.alreadyConverted) {
+                    setError('⚠️ This lead has already been converted to a client.');
+                    if (data.projectId) {
+                        setError(`⚠️ This lead was already converted. View the project here: Project ID ${data.projectId}`);
+                    }
+                } else {
+                    setError(data.error || 'Failed to convert lead');
+                }
             }
         } catch (err) {
             console.error('Convert error:', err);
-            setError('Connection error. Please try again.');
+            setError('❌ Connection error. Please check if the server is running and try again.');
         } finally {
             setConverting(false);
         }
     };
 
     const handleDelete = async (leadId) => {
-        if (!confirm('Are you sure you want to delete this lead?')) return;
+        if (!confirm('⚠️ Are you sure you want to permanently delete this lead? This action cannot be undone.')) return;
 
         const token = localStorage.getItem('token');
         try {
@@ -105,8 +122,10 @@ const AdminLeads = ({ user }) => {
 
             if (res.ok) {
                 loadLeads();
-                setSuccess('Lead deleted successfully');
+                setSuccess('✅ Lead deleted successfully');
                 setTimeout(() => setSuccess(''), 3000);
+            } else {
+                setError('Failed to delete lead');
             }
         } catch (err) {
             setError('Failed to delete lead');
@@ -128,7 +147,7 @@ const AdminLeads = ({ user }) => {
 
             if (res.ok) {
                 loadLeads();
-                setSuccess('Lead rejected');
+                setSuccess('✅ Lead rejected');
                 setTimeout(() => setSuccess(''), 3000);
             }
         } catch (err) {
@@ -204,7 +223,7 @@ const AdminLeads = ({ user }) => {
                             animate={{ opacity: 1, y: 0 }}
                             className="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg flex items-center gap-3"
                         >
-                            <CheckCircle className="w-5 h-5 text-green-600" />
+                            <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0" />
                             <span className="text-sm text-green-700">{success}</span>
                         </motion.div>
                     )}
@@ -213,12 +232,27 @@ const AdminLeads = ({ user }) => {
                         <motion.div
                             initial={{ opacity: 0, y: -10 }}
                             animate={{ opacity: 1, y: 0 }}
-                            className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg flex items-center gap-3"
+                            className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg flex items-start gap-3"
                         >
-                            <XCircle className="w-5 h-5 text-red-600" />
-                            <span className="text-sm text-red-700">{error}</span>
+                            <XCircle className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
+                            <div className="flex-1">
+                                <p className="text-sm text-red-700 whitespace-pre-line">{error}</p>
+                            </div>
+                            <button onClick={() => setError('')} className="text-red-400 hover:text-red-600">
+                                <X className="w-4 h-4" />
+                            </button>
                         </motion.div>
                     )}
+
+                    {/* Important Note */}
+                    <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-lg flex items-start gap-3">
+                        <AlertTriangle className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" />
+                        <div className="text-sm text-blue-800">
+                            <strong>Important:</strong> Leads and Clients are separate entities. Leads are inquiry forms (no login access). 
+                            When you convert a lead to a client, you create a new user account with login credentials. 
+                            The lead's email must NOT already exist in the users table.
+                        </div>
+                    </div>
 
                     {/* Leads Table */}
                     {leads.length > 0 ? (
@@ -442,16 +476,16 @@ const AdminLeads = ({ user }) => {
                         {!generatedCredentials ? (
                             <>
                                 <h2 className="text-2xl font-[var(--font-heading)] font-bold mb-4 text-[var(--color-accent2)]">
-                                    Convert to Client
+                                    Convert Lead to Client
                                 </h2>
                                 <p className="text-[var(--color-tx-muted)] mb-6">
                                     Create a client account for <strong>{selectedLead.full_name}</strong>
                                 </p>
 
                                 {error && (
-                                    <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg flex items-center gap-2">
-                                        <XCircle className="w-4 h-4 text-red-600 flex-shrink-0" />
-                                        <span className="text-sm text-red-700">{error}</span>
+                                    <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg flex items-start gap-2">
+                                        <XCircle className="w-4 h-4 text-red-600 flex-shrink-0 mt-0.5" />
+                                        <span className="text-sm text-red-700 whitespace-pre-line flex-1">{error}</span>
                                     </div>
                                 )}
 
@@ -464,6 +498,9 @@ const AdminLeads = ({ user }) => {
                                             disabled
                                             className="w-full px-4 py-2 rounded-lg border border-[var(--color-border)] bg-gray-50"
                                         />
+                                        <p className="text-xs text-[var(--color-tx-muted)] mt-1">
+                                            This email will be used for client login
+                                        </p>
                                     </div>
 
                                     <div>
@@ -493,13 +530,14 @@ const AdminLeads = ({ user }) => {
                                     <button
                                         onClick={handleConvert}
                                         disabled={converting}
-                                        className="flex-1 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:opacity-50 transition"
+                                        className="flex-1 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed transition"
                                     >
-                                        {converting ? 'Converting...' : 'Create Account & Project'}
+                                        {converting ? 'Converting...' : 'Create Client Account'}
                                     </button>
                                     <button
                                         onClick={closeConvertModal}
-                                        className="px-6 py-3 border border-[var(--color-border)] rounded-lg hover:bg-gray-50 transition"
+                                        disabled={converting}
+                                        className="px-6 py-3 border border-[var(--color-border)] rounded-lg hover:bg-gray-50 transition disabled:opacity-50"
                                     >
                                         Cancel
                                     </button>
@@ -549,21 +587,38 @@ const AdminLeads = ({ user }) => {
                                                 </button>
                                             </div>
                                         </div>
+                                        <div>
+                                            <p className="text-xs text-blue-600 mb-1">Project Created</p>
+                                            <p className="text-sm font-medium">{generatedCredentials.projectName}</p>
+                                        </div>
                                     </div>
                                 </div>
 
                                 <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-6">
                                     <p className="text-xs text-yellow-800">
-                                        ⚠️ Make sure to save these credentials! Send them to the client via email or secure message.
+                                        ⚠️ Important: Save these credentials! Send them to the client via email or secure message. 
+                                        The client can now login at your platform URL.
                                     </p>
                                 </div>
 
-                                <button
-                                    onClick={closeConvertModal}
-                                    className="w-full py-3 bg-[var(--color-primary)] text-white rounded-lg hover:bg-[var(--color-primary-hover)] transition"
-                                >
-                                    Done
-                                </button>
+                                <div className="flex gap-3">
+                                    <button
+                                        onClick={() => {
+                                            navigator.clipboard.writeText(`Login Credentials for ${generatedCredentials.name}\n\nEmail: ${generatedCredentials.email}\nPassword: ${generatedCredentials.password}\n\nProject: ${generatedCredentials.projectName}\n\nPlease login at: http://localhost:5173/login`);
+                                            alert('All credentials copied to clipboard!');
+                                        }}
+                                        className="flex-1 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition flex items-center justify-center gap-2"
+                                    >
+                                        <Copy className="w-4 h-4" />
+                                        Copy All Details
+                                    </button>
+                                    <button
+                                        onClick={closeConvertModal}
+                                        className="px-6 py-3 bg-[var(--color-primary)] text-white rounded-lg hover:bg-[var(--color-primary-hover)] transition"
+                                    >
+                                        Done
+                                    </button>
+                                </div>
                             </>
                         )}
                     </motion.div>

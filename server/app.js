@@ -152,5 +152,5 @@ function tryParseJSON(val) {
 }
 
 app.listen(PORT, () => {
-  console.log(`Server listening on https://projectsport:${PORT}`);
+  console.log(`Server listening on https://projectsport.vercel.app:${PORT}`);
 });

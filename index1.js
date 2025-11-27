@@ -1,4 +1,4 @@
-// server/index.js - PERFECT MERGE: All Features + Working Lead Conversion
+// server/index.js - FIXED VERSION
 require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
@@ -266,7 +266,7 @@ app.get("/api/leads/:id", authMiddleware, adminOnly, async (req, res) => {
   }
 });
 
-// ============= CONVERT LEAD TO CLIENT - WORKING VERSION FROM INDEX2 =============
+// ============= CONVERT LEAD TO CLIENT - COMPLETELY FIXED =============
 app.post(
   "/api/leads/:id/convert",
   authMiddleware,
@@ -276,6 +276,7 @@ app.post(
 
     try {
       await connection.beginTransaction();
+
       const { password } = req.body;
 
       if (!password || password.length < 6) {
@@ -286,7 +287,7 @@ app.post(
         });
       }
 
-      // Get lead
+      // 1. Get lead details
       const [leads] = await connection.query(
         "SELECT * FROM leads WHERE id = ?",
         [req.params.id]
@@ -299,16 +300,32 @@ app.post(
 
       const lead = leads[0];
 
-      // Check if already converted
+      // 2. Check if lead was already converted
       if (lead.status === "converted") {
         await connection.rollback();
+
+        if (lead.converted_user_id) {
+          const [projects] = await connection.query(
+            "SELECT id FROM projects WHERE client_id = ? ORDER BY created_at DESC LIMIT 1",
+            [lead.converted_user_id]
+          );
+
+          return res.status(400).json({
+            ok: false,
+            error: "This lead has already been converted to a client",
+            alreadyConverted: true,
+            userId: lead.converted_user_id,
+            projectId: projects.length ? projects[0].id : null,
+          });
+        }
+
         return res.status(400).json({
           ok: false,
-          error: "Lead already converted",
+          error: "This lead has already been converted",
         });
       }
 
-      // Check if user exists
+      // 3. Check if a CLIENT user already exists with this email
       const [existingUsers] = await connection.query(
         "SELECT id, email, full_name, role FROM users WHERE email = ?",
         [lead.email]
@@ -316,13 +333,21 @@ app.post(
 
       if (existingUsers.length > 0) {
         await connection.rollback();
+        const existingUser = existingUsers[0];
+
         return res.status(400).json({
           ok: false,
-          error: `User with email ${lead.email} already exists`,
+          error: `A ${existingUser.role} account already exists with email ${lead.email} (${existingUser.full_name}). Please use a different email for this lead, or delete the existing user account first.`,
+          existingUser: {
+            id: existingUser.id,
+            email: existingUser.email,
+            full_name: existingUser.full_name,
+            role: existingUser.role,
+          },
         });
       }
 
-      // Create user
+      // 4. Create new CLIENT user account
       const hashedPassword = await bcrypt.hash(password, 10);
       const [userResult] = await connection.query(
         "INSERT INTO users (email, password, full_name, phone, company, role, is_active) VALUES (?, ?, ?, ?, ?, 'client', TRUE)",
@@ -330,14 +355,14 @@ app.post(
           lead.email,
           hashedPassword,
           lead.full_name,
-          lead.phone || null,
+          lead.phone,
           lead.company || null,
         ]
       );
 
       const userId = userResult.insertId;
 
-      // Parse estimate
+      // 5. Parse estimate JSON to get final amount
       let estimateFinal = lead.budget || 0;
       try {
         if (lead.estimate_json) {
@@ -348,48 +373,47 @@ app.post(
           estimateFinal = estimateData.final || lead.budget || 0;
         }
       } catch (e) {
-        console.log("Parse estimate error:", e);
+        console.log("Could not parse estimate JSON, using budget:", e);
       }
 
-      // Create project - WORKING VERSION with proper value handling
-      const projectValues = [
-        lead.project_name || "Untitled Project",
-        userId,
-        lead.type_key || null,
-        lead.type_label || null,
-        lead.tech_stack || null,
-        lead.description || null,
-        lead.budget || 0,
-        estimateFinal,
-        lead.estimate_json ? JSON.stringify(lead.estimate_json) : null,
-        lead.modules ? JSON.stringify(lead.modules) : null,
-        lead.addons ? JSON.stringify(lead.addons) : null,
-        lead.resources ? JSON.stringify(lead.resources) : null,
-        lead.hosting || null,
-        lead.cms || null,
-        lead.estimated_weeks || 4,
-        "approved",
-        "medium",
-      ];
-
+      // 6. Create project for the new client (APPROVED status)
+      // FIXED: Match exact column count (17 columns, 17 values)
       const [projectResult] = await connection.query(
         `INSERT INTO projects 
       (project_name, client_id, type_key, type_label, tech_stack, description, 
        budget, estimate_final, estimate_json, modules, addons, resources, 
-       hosting, cms, estimated_weeks, status, priority) 
+       hosting, cms, estimated_weeks, status, priority)
       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-        projectValues
+        [
+          lead.project_name,
+          userId,
+          lead.type_key || null,
+          lead.type_label || null,
+          lead.tech_stack || null,
+          lead.description || null,
+          lead.budget || 0,
+          estimateFinal,
+          lead.estimate_json || null,
+          lead.modules || null,
+          lead.addons || null,
+          lead.resources || null,
+          lead.hosting || null,
+          lead.cms || null,
+          lead.estimated_weeks || 4,
+          "approved",
+          "medium",
+        ]
       );
 
       const projectId = projectResult.insertId;
 
-      // Update lead
+      // 7. Update lead status to 'converted' and link to user
       await connection.query(
         "UPDATE leads SET status = 'converted', converted_user_id = ?, converted_at = NOW() WHERE id = ?",
         [userId, req.params.id]
       );
 
-      // Create notifications
+      // 8. Create welcome notification for NEW CLIENT
       await connection.query(
         "INSERT INTO notifications (user_id, title, message, type, link) VALUES (?, ?, ?, 'success', ?)",
         [
@@ -400,6 +424,7 @@ app.post(
         ]
       );
 
+      // 9. Create notification for ADMIN
       await connection.query(
         "INSERT INTO notifications (user_id, title, message, type, link) VALUES (?, ?, ?, 'success', ?)",
         [
@@ -429,8 +454,6 @@ app.post(
     } catch (err) {
       await connection.rollback();
       console.error("Convert lead error:", err);
-      console.error("Error message:", err.message);
-      console.error("SQL:", err.sql);
       res.status(500).json({
         ok: false,
         error: "Failed to convert lead: " + err.message,
@@ -448,9 +471,12 @@ app.post(
   adminOnly,
   async (req, res) => {
     try {
+      const { reason } = req.body;
+
       await pool.query("UPDATE leads SET status = 'rejected' WHERE id = ?", [
         req.params.id,
       ]);
+
       res.json({ ok: true, message: "Lead rejected" });
     } catch (err) {
       console.error("Reject lead error:", err);
@@ -496,7 +522,6 @@ app.post("/api/projects", authMiddleware, async (req, res) => {
     }
 
     const estimateFinal = estimate?.final || budget || 0;
-
     const [result] = await pool.query(
       `INSERT INTO projects 
       (project_name, client_id, type_key, type_label, tech_stack, description, 
@@ -506,18 +531,18 @@ app.post("/api/projects", authMiddleware, async (req, res) => {
       [
         projectName,
         req.user.id,
-        typeKey || null,
-        typeLabel || null,
-        techStack || null,
-        description || null,
+        typeKey,
+        typeLabel,
+        techStack,
+        description,
         budget || 0,
         estimateFinal,
         JSON.stringify(estimate || {}),
         JSON.stringify(modules || []),
         JSON.stringify(addons || []),
         JSON.stringify(resources || []),
-        hosting || null,
-        cms || null,
+        hosting,
+        cms,
         estimatedTimeWeeks || 4,
         "pending",
         "medium",
@@ -1040,6 +1065,6 @@ app.use((err, req, res, next) => {
 });
 
 app.listen(PORT, () => {
-  console.log(`✅ ProjectPort API running on https://projectsport.vercel.app:${PORT}`);
+  console.log(`✅ ProjectPort API running on http://localhost:${PORT}`);
   console.log(`📡 CORS enabled for: ${CLIENT_ORIGIN}`);
 });
