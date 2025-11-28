@@ -604,7 +604,7 @@ Options:
                                 <div className="flex gap-3">
                                     <button
                                         onClick={() => {
-                                            navigator.clipboard.writeText(`Login Credentials for ${generatedCredentials.name}\n\nEmail: ${generatedCredentials.email}\nPassword: ${generatedCredentials.password}\n\nProject: ${generatedCredentials.projectName}\n\nPlease login at: http://localhost:5173/login`);
+                                            navigator.clipboard.writeText(`Login Credentials for ${generatedCredentials.name}\n\nEmail: ${generatedCredentials.email}\nPassword: ${generatedCredentials.password}\n\nProject: ${generatedCredentials.projectName}\n\nPlease login at: https://projectsport.vercel.app/login`);
                                             alert('All credentials copied to clipboard!');
                                         }}
                                         className="flex-1 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition flex items-center justify-center gap-2"

@@ -17,6 +17,7 @@ import {
 } from "lucide-react";
 import Header from "../layout/Header";
 import Footer from "../layout/Footer";
+import SEO from "../components/SEO";
 
 const fadeIn = (delay = 0) => ({
     initial: { opacity: 0, y: 30 },
@@ -66,6 +67,10 @@ const Landing = () => {
 
     return (
         <>
+            <SEO
+                page="home"
+                schemaType="website"
+            />
             {/* <Header /> */}
             <main className=" pt-20 bg-[var(--color-bg-main)] text-[var(--color-tx-main)] font-[var(--font-body)]">
                 {/* ================= HERO SECTION ================= */}
@@ -374,7 +379,7 @@ const Landing = () => {
                         </div>
                     </motion.div>
                 </section>
-                
+
             </main>
             {/* <Footer /> */}
         </>
