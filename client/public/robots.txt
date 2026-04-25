@@ -1,0 +1,73 @@
+# ProjectPort Robots.txt
+# https://projectsport.vercel.app/robots.txt
+
+User-agent: *
+Allow: /
+Allow: /start-project
+Allow: /login
+Allow: /register
+
+# Disallow authenticated areas
+Disallow: /client/
+Disallow: /admin/
+Disallow: /api/
+
+# Disallow admin tools
+Disallow: /admin
+Disallow: /*?*apikey=*
+Disallow: /*?*token=*
+
+# Allow CSS and JS for proper rendering
+Allow: /*.css$
+Allow: /*.js$
+Allow: /*.svg$
+Allow: /*.png$
+Allow: /*.jpg$
+Allow: /*.webp$
+
+# Crawl delay to be respectful
+Crawl-delay: 1
+
+# Sitemap location
+Sitemap: https://projectsport.vercel.app/sitemap.xml
+Sitemap: https://projectsport.vercel.app/sitemap-index.xml
+
+# Specific bot rules
+
+# Google
+User-agent: Googlebot
+Allow: /
+Disallow: /client/
+Disallow: /admin/
+Crawl-delay: 0.5
+
+# Bing
+User-agent: Bingbot
+Allow: /
+Disallow: /client/
+Disallow: /admin/
+Crawl-delay: 1
+
+# Yandex
+User-agent: Yandex
+Allow: /
+Disallow: /client/
+Disallow: /admin/
+Crawl-delay: 2
+
+# Block bad bots
+User-agent: AhrefsBot
+Crawl-delay: 10
+
+User-agent: SemrushBot
+Crawl-delay: 10
+
+# Block scrapers
+User-agent: MJ12bot
+Disallow: /
+
+User-agent: dotbot
+Disallow: /
+
+User-agent: AhrefsBot
+Disallow: /
