@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+<<<<<<< HEAD
 import { fetchProjects } from '../utils/api';
+=======
+>>>>>>> eda06ec735637dfc147bcd48b585479b88ad17a7
 import { motion } from 'framer-motion';
 import { FolderKanban, Plus, ArrowLeft } from 'lucide-react';
 
@@ -9,7 +12,15 @@ const ClientProjects = ({ user }) => {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
+<<<<<<< HEAD
         fetchProjects()
+=======
+        const token = localStorage.getItem('token');
+        fetch('https://projectport-8w1j.onrender.com/api/projects', {
+            headers: { 'Authorization': `Bearer ${token}` }
+        })
+            .then(r => r.json())
+>>>>>>> eda06ec735637dfc147bcd48b585479b88ad17a7
             .then(data => {
                 if (data.ok) setProjects(data.projects);
             })
