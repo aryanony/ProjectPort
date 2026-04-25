@@ -11,10 +11,10 @@ const ClientProjectDetail = ({ user }) => {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-<<<<<<< HEAD
         fetchProject(id)
-=======
-        fetch(`https://projectport-8w1j.onrender.com/api/projects/${id}`, {
+            .then(data => {
+                if (data.ok) {
+                    setProject(data.project);
                 }
             })
             .finally(() => setLoading(false));

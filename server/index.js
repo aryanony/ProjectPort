@@ -29,17 +29,32 @@ const authMiddleware = async (req, res, next) => {
     }
 
     const decoded = jwt.verify(token, JWT_SECRET);
-    const user = await User.findOne({ _id: decoded.id, is_active: true }).select('-password');
-    
-    if (!user) {
+    const [users] = await pool.query(
+      "SELECT id, email, full_name, role, phone, company FROM users WHERE id = ? AND is_active = TRUE",
+      [decoded.id]
+    );
+
+    if (!users.length) {
       return res.status(401).json({ ok: false, error: "Invalid token" });
     }
 
-    req.user = user;
+    req.user = users[0];
     next();
   } catch (err) {
     console.error("Auth middleware error:", err);
     return res.status(401).json({ ok: false, error: "Invalid token" });
+  }
+};
+
+const adminOnly = (req, res, next) => {
+  if (req.user.role !== "admin") {
+    return res.status(403).json({ ok: false, error: "Admin access required" });
+  }
+  next();
+};
+
+// ============= AUTH ROUTES =============
+app.post("/api/auth/register", async (req, res) => {
   try {
     const { email, password, full_name, phone, company } = req.body;
 
