@@ -1,9 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-<<<<<<< HEAD
 import { fetchProject, updateProject, createMilestone, updateMilestone, createProjectUpdate } from '../utils/api';
-=======
->>>>>>> eda06ec735637dfc147bcd48b585479b88ad17a7
 import { motion } from 'framer-motion';
 import { ArrowLeft, Save, Plus, CheckCircle, Clock, DollarSign } from 'lucide-react';
 
@@ -33,15 +30,7 @@ const AdminProjectDetail = ({ user }) => {
     }, [id]);
 
     const loadProject = () => {
-<<<<<<< HEAD
         fetchProject(id)
-=======
-        const token = localStorage.getItem('token');
-        fetch(`https://projectport-8w1j.onrender.com/api/projects/${id}`, {
-            headers: { 'Authorization': `Bearer ${token}` }
-        })
-            .then(r => r.json())
->>>>>>> eda06ec735637dfc147bcd48b585479b88ad17a7
             .then(data => {
                 if (data.ok) {
                     setProject(data.project);
@@ -60,25 +49,10 @@ const AdminProjectDetail = ({ user }) => {
         e.preventDefault();
         setUpdating(true);
 
-<<<<<<< HEAD
         try {
             const data = await updateProject(id, formData);
 
             if (data.ok || data.project) {
-=======
-        const token = localStorage.getItem('token');
-        try {
-            const res = await fetch(`https://projectport-8w1j.onrender.com/api/projects/${id}`, {
-                method: 'PATCH',
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(formData)
-            });
-
-            if (res.ok) {
->>>>>>> eda06ec735637dfc147bcd48b585479b88ad17a7
                 alert('Project updated successfully!');
                 loadProject();
             }
@@ -89,24 +63,9 @@ const AdminProjectDetail = ({ user }) => {
 
     const handleAddMilestone = async (e) => {
         e.preventDefault();
-<<<<<<< HEAD
         const data = await createMilestone(id, newMilestone);
 
         if (data.ok || data.milestone) {
-=======
-        const token = localStorage.getItem('token');
-
-        const res = await fetch(`https://projectport-8w1j.onrender.com/api/projects/${id}/milestones`, {
-            method: 'POST',
-            headers: {
-                'Authorization': `Bearer ${token}`,
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(newMilestone)
-        });
-
-        if (res.ok) {
->>>>>>> eda06ec735637dfc147bcd48b585479b88ad17a7
             setNewMilestone({ title: '', description: '', due_date: '' });
             loadProject();
         }
@@ -114,43 +73,16 @@ const AdminProjectDetail = ({ user }) => {
 
     const handleAddUpdate = async (e) => {
         e.preventDefault();
-<<<<<<< HEAD
         const data = await createProjectUpdate(id, newUpdate);
 
         if (data.ok || data.update) {
-=======
-        const token = localStorage.getItem('token');
-
-        const res = await fetch(`https://projectport-8w1j.onrender.com/api/projects/${id}/updates`, {
-            method: 'POST',
-            headers: {
-                'Authorization': `Bearer ${token}`,
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(newUpdate)
-        });
-
-        if (res.ok) {
->>>>>>> eda06ec735637dfc147bcd48b585479b88ad17a7
             setNewUpdate({ title: '', message: '' });
             loadProject();
         }
     };
 
     const updateMilestoneStatus = async (milestoneId, status) => {
-<<<<<<< HEAD
         await updateMilestone(milestoneId, { status });
-=======
-        const token = localStorage.getItem('token');
-        await fetch(`https://projectport-8w1j.onrender.com/api/milestones/${milestoneId}`, {
-            method: 'PATCH',
-            headers: {
-                'Authorization': `Bearer ${token}`,
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ status })
-        });
->>>>>>> eda06ec735637dfc147bcd48b585479b88ad17a7
         loadProject();
     };
 

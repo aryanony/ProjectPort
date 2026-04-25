@@ -20,14 +20,8 @@
     "dotenv": "^16.3.1",
     "express": "^4.18.2",
     "jsonwebtoken": "^9.0.2",
-<<<<<<< HEAD
     "mongodb": "^7.2.0",
     "mongoose": "^9.5.0",
     "multer": "^2.0.2"
-=======
-    "multer": "^2.0.2",
-    "mysql2": "^3.6.0",
-    "sequelize": "^6.37.7"
->>>>>>> eda06ec735637dfc147bcd48b585479b88ad17a7
   }
 }

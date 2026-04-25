@@ -1,13 +1,7 @@
 // client/src/App.jsx
-<<<<<<< HEAD
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { authMe } from './utils/api';
-=======
-// SIMPLE VERSION - No lazy loading, just SEO
-import React, { useState, useEffect } from 'react';
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
->>>>>>> eda06ec735637dfc147bcd48b585479b88ad17a7
 import Landing from "./pages/Landing";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
@@ -27,7 +21,6 @@ const App = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-<<<<<<< HEAD
     const checkUser = async () => {
       try {
         const token = localStorage.getItem('token');
@@ -43,26 +36,6 @@ const App = () => {
       }
     };
     checkUser();
-=======
-    const token = localStorage.getItem('token');
-    if (token) {
-      fetch('https://projectport-8w1j.onrender.com/api/auth/me', {
-        headers: { 'Authorization': `Bearer ${token}` }
-      })
-        .then(res => res.json())
-        .then(data => {
-          if (data.ok) {
-            setUser(data.user);
-          } else {
-            localStorage.removeItem('token');
-          }
-        })
-        .catch(() => localStorage.removeItem('token'))
-        .finally(() => setLoading(false));
-    } else {
-      setLoading(false);
-    }
->>>>>>> eda06ec735637dfc147bcd48b585479b88ad17a7
   }, []);
 
   const logout = () => {
@@ -86,23 +59,10 @@ const App = () => {
         <Route path="/" element={<Landing />} />
         <Route path="/login" element={user ? <Navigate to={user.role === 'admin' ? '/admin' : '/client'} /> : <Login setUser={setUser} />} />
         <Route path="/register" element={user ? <Navigate to="/client" /> : <Register setUser={setUser} />} />
-<<<<<<< HEAD
         <Route path="/client" element={user && user.role === 'client' ? <ClientDashboard user={user} /> : <Navigate to="/login" />} />
         <Route path="/client/projects" element={user && user.role === 'client' ? <ClientProjects user={user} /> : <Navigate to="/login" />} />
         <Route path="/client/projects/:id" element={user && user.role === 'client' ? <ClientProjectDetail user={user} /> : <Navigate to="/login" />} />
         <Route path="/start-project" element={<ClientConsole />} />
-=======
-
-        {/* Client Routes */}
-        <Route path="/client" element={user && user.role === 'client' ? <ClientDashboard user={user} /> : <Navigate to="/login" />} />
-        <Route path="/client/projects" element={user && user.role === 'client' ? <ClientProjects user={user} /> : <Navigate to="/login" />} />
-        <Route path="/client/projects/:id" element={user && user.role === 'client' ? <ClientProjectDetail user={user} /> : <Navigate to="/login" />} />
-
-        {/* Public Route - No Auth Required */}
-        <Route path="/start-project" element={<ClientConsole />} />
-
-        {/* Admin Routes */}
->>>>>>> eda06ec735637dfc147bcd48b585479b88ad17a7
         <Route path="/admin" element={user && user.role === 'admin' ? <AdminDashboard user={user} /> : <Navigate to="/login" />} />
         <Route path="/admin/projects" element={user && user.role === 'admin' ? <AdminProjects user={user} /> : <Navigate to="/login" />} />
         <Route path="/admin/projects/:id" element={user && user.role === 'admin' ? <AdminProjectDetail user={user} /> : <Navigate to="/login" />} />

@@ -11,7 +11,7 @@ const Footer = () => {
                 <div>
                     <div className="flex items-center gap-2 mb-3">
                         <Link to="/">
-                        <img src="/logo.svg" alt="ProjectPort" className="h-16 w-auto" />
+                            <img src="/logo.svg" alt="ProjectPort" className="h-16 w-auto" />
                         </Link>
                     </div>
                     <p className="text-[var(--color-accent2)] text-sm leading-relaxed max-w-sm">

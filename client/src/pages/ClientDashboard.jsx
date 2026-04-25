@@ -1,9 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-<<<<<<< HEAD
 import { fetchDashboardStats, fetchProjects, fetchNotifications } from '../utils/api';
-=======
->>>>>>> eda06ec735637dfc147bcd48b585479b88ad17a7
 import { motion } from 'framer-motion';
 import SEO from '../components/SEO';
 import { FolderKanban, Clock, CheckCircle, Plus, ArrowRight, Bell } from 'lucide-react';
@@ -15,27 +12,10 @@ const ClientDashboard = ({ user }) => {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-<<<<<<< HEAD
         Promise.all([
             fetchDashboardStats(),
             fetchProjects(),
             fetchNotifications()
-=======
-        const token = localStorage.getItem('token');
-
-        Promise.all([
-            fetch('https://projectport-8w1j.onrender.com/api/dashboard/stats', {
-                headers: { 'Authorization': `Bearer ${token}` }
-            }).then(r => r.json()),
-
-            fetch('https://projectport-8w1j.onrender.com/api/projects', {
-                headers: { 'Authorization': `Bearer ${token}` }
-            }).then(r => r.json()),
-
-            fetch('https://projectport-8w1j.onrender.com/api/notifications', {
-                headers: { 'Authorization': `Bearer ${token}` }
-            }).then(r => r.json())
->>>>>>> eda06ec735637dfc147bcd48b585479b88ad17a7
         ])
             .then(([statsData, projectsData, notifData]) => {
                 if (statsData.ok) setStats(statsData.stats);

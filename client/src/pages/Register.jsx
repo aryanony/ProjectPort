@@ -1,9 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-<<<<<<< HEAD
 import { authRegister } from '../utils/api';
-=======
->>>>>>> eda06ec735637dfc147bcd48b585479b88ad17a7
 import { motion } from 'framer-motion';
 import { UserPlus, Mail, Lock, User, Phone, Building, AlertCircle, Eye, EyeOff, ArrowLeft, CheckCircle } from 'lucide-react';
 
@@ -36,17 +33,7 @@ const Register = ({ setUser }) => {
         setLoading(true);
 
         try {
-<<<<<<< HEAD
             const data = await authRegister(formData.email, formData.password, formData.full_name, formData.phone, formData.company);
-=======
-            const res = await fetch('https://projectport-8w1j.onrender.com/api/auth/register', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(formData)
-            });
-
-            const data = await res.json();
->>>>>>> eda06ec735637dfc147bcd48b585479b88ad17a7
 
             if (data.ok) {
                 localStorage.setItem('token', data.token);

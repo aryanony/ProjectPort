@@ -1,9 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-<<<<<<< HEAD
 import { authLogin } from '../utils/api';
-=======
->>>>>>> eda06ec735637dfc147bcd48b585479b88ad17a7
 import { motion } from 'framer-motion';
 import SEO from '../components/SEO';
 import { LogIn, Mail, Lock, AlertCircle, Eye, EyeOff, ArrowLeft } from 'lucide-react';
@@ -22,17 +19,7 @@ const Login = ({ setUser }) => {
         setLoading(true);
 
         try {
-<<<<<<< HEAD
             const data = await authLogin(email, password);
-=======
-            const res = await fetch('https://projectport-8w1j.onrender.com/api/auth/login', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email, password })
-            });
-
-            const data = await res.json();
->>>>>>> eda06ec735637dfc147bcd48b585479b88ad17a7
 
             if (data.ok) {
                 localStorage.setItem('token', data.token);

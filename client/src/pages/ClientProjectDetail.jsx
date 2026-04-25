@@ -1,9 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-<<<<<<< HEAD
 import { fetchProject } from '../utils/api';
-=======
->>>>>>> eda06ec735637dfc147bcd48b585479b88ad17a7
 import { motion } from 'framer-motion';
 import SEO from '../components/SEO';
 import { ArrowLeft, Calendar, DollarSign, Clock, CheckCircle2, User } from 'lucide-react';
@@ -17,15 +14,7 @@ const ClientProjectDetail = ({ user }) => {
 <<<<<<< HEAD
         fetchProject(id)
 =======
-        const token = localStorage.getItem('token');
         fetch(`https://projectport-8w1j.onrender.com/api/projects/${id}`, {
-            headers: { 'Authorization': `Bearer ${token}` }
-        })
-            .then(r => r.json())
->>>>>>> eda06ec735637dfc147bcd48b585479b88ad17a7
-            .then(data => {
-                if (data.ok) {
-                    setProject(data.project);
                 }
             })
             .finally(() => setLoading(false));

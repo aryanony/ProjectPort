@@ -13,11 +13,7 @@
     "@svgr/webpack": "^8.1.0",
     "@tailwindcss/vite": "^4.1.16",
     "framer-motion": "^12.23.24",
-<<<<<<< HEAD
     "jspdf": "^4.2.1",
-=======
-    "jspdf": "^3.0.3",
->>>>>>> eda06ec735637dfc147bcd48b585479b88ad17a7
     "lucide-react": "^0.548.0",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",

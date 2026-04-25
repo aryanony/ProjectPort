@@ -1,5 +1,4 @@
 // client/src/utils/api.js
-<<<<<<< HEAD
 const BASE = import.meta.env.VITE_API_BASE;
 
 async function apiFetch(path, opts = {}) {
@@ -25,26 +24,6 @@ async function apiFetch(path, opts = {}) {
     let body = text;
     try { body = JSON.parse(text); } catch (e) {}
     const err = new Error(body?.error || "API Error");
-=======
-const BASE = import.meta.env.VITE_API_BASE || "https://projectport-8w1j.onrender.com/api";
-
-async function apiFetch(path, opts = {}) {
-  const url = BASE.replace(/\/$/, "") + path;
-  const res = await fetch(url, {
-    headers: {
-      "Content-Type": "application/json",
-      ...(opts.headers || {}),
-    },
-    ...opts,
-  });
-  if (!res.ok) {
-    const text = await res.text().catch(() => "");
-    let body = text;
-    try {
-      body = JSON.parse(text);
-    } catch (e) {}
-    const err = new Error("API Error");
->>>>>>> eda06ec735637dfc147bcd48b585479b88ad17a7
     err.status = res.status;
     err.body = body;
     throw err;
@@ -52,7 +31,6 @@ async function apiFetch(path, opts = {}) {
   return res.json().catch(() => ({}));
 }
 
-<<<<<<< HEAD
 // === Auth ===
 export async function authMe() {
   return apiFetch("/auth/me");
@@ -133,22 +111,4 @@ export async function markNotificationRead(id) {
 // === Dashboard ===
 export async function fetchDashboardStats() {
   return apiFetch("/dashboard/stats");
-=======
-export async function submitLead(payload) {
-  return apiFetch("/leads", {
-    method: "POST",
-    body: JSON.stringify(payload),
-  });
-}
-
-export async function submitProject(payload) {
-  return apiFetch("/projects", {
-    method: "POST",
-    body: JSON.stringify(payload),
-  });
-}
-
-export async function fetchProjects(limit = 100) {
-  return apiFetch(`/projects?limit=${encodeURIComponent(limit)}`);
->>>>>>> eda06ec735637dfc147bcd48b585479b88ad17a7
 }

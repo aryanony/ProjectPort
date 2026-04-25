@@ -3,10 +3,7 @@ import React, { useEffect, useMemo, useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { calculateEstimate, getPriceRangeForType, getTypeLabel, availableAddOns } from "../utils/priceEngine";
 import jsPDF from "jspdf";
-<<<<<<< HEAD
 import { createLead, createProject } from "../utils/api";
-=======
->>>>>>> eda06ec735637dfc147bcd48b585479b88ad17a7
 
 const Chip = ({ children, active, onClick }) => (
     <button
@@ -144,7 +141,6 @@ export default function ProjectForm({ typeKey, onSubmitComplete, onEstimateChang
         setSubmitting(true);
 
         try {
-<<<<<<< HEAD
             if (isLead) {
                 const result = await createLead(payload);
                 if (result.ok || result.lead) {
@@ -157,49 +153,6 @@ export default function ProjectForm({ typeKey, onSubmitComplete, onEstimateChang
                     onSubmitComplete?.(result);
                     alert("Project submitted successfully! ✅");
                     reset();
-=======
-            // If isLead is true, submit to leads API (no authentication)
-            if (isLead) {
-                const res = await fetch('https://projectport-8w1j.onrender.com/api/leads', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
-                });
-
-                const result = await res.json();
-
-                if (result.ok) {
-                    onSubmitComplete?.(result);
-                    reset();
-                } else {
-                    throw new Error(result.error || 'Failed to submit inquiry');
-                }
-            } else {
-                // Submit to projects API (authenticated)
-                const token = localStorage.getItem('token');
-                if (!token) {
-                    alert('Please login first');
-                    return;
-                }
-
-                const res = await fetch('https://projectport-8w1j.onrender.com/api/projects', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${token}`
-                    },
-                    body: JSON.stringify(payload)
-                });
-
-                const result = await res.json();
-
-                if (result.ok) {
-                    onSubmitComplete?.(result);
-                    alert("Project submitted successfully! ✅");
-                    reset();
-                } else {
-                    throw new Error(result.error || 'Failed to submit project');
->>>>>>> eda06ec735637dfc147bcd48b585479b88ad17a7
                 }
             }
         } catch (err) {

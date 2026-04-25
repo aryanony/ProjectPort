@@ -1,9 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-<<<<<<< HEAD
 import { fetchLeads, convertLead, rejectLead, deleteLead } from '../utils/api';
-=======
->>>>>>> eda06ec735637dfc147bcd48b585479b88ad17a7
 import { motion } from 'framer-motion';
 import { Users, Mail, Phone, Building, Calendar, CheckCircle, X, Eye, User, ArrowLeft, Trash2, XCircle, Copy, Check, AlertTriangle } from 'lucide-react';
 
@@ -26,15 +23,7 @@ const AdminLeads = ({ user }) => {
 
     const loadLeads = () => {
         setLoading(true);
-<<<<<<< HEAD
         fetchLeads()
-=======
-        const token = localStorage.getItem('token');
-        fetch('https://projectport-8w1j.onrender.com/api/leads', {
-            headers: { 'Authorization': `Bearer ${token}` }
-        })
-            .then(r => r.json())
->>>>>>> eda06ec735637dfc147bcd48b585479b88ad17a7
             .then(data => {
                 if (data.ok) setLeads(data.leads);
             })
@@ -71,20 +60,7 @@ const AdminLeads = ({ user }) => {
         const token = localStorage.getItem('token');
 
         try {
-<<<<<<< HEAD
             const data = await convertLead(selectedLead.id, password);
-=======
-            const res = await fetch(`https://projectport-8w1j.onrender.com/api/leads/${selectedLead.id}/convert`, {
-                method: 'POST',
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ password })
-            });
-
-            const data = await res.json();
->>>>>>> eda06ec735637dfc147bcd48b585479b88ad17a7
 
             if (data.ok) {
                 setGeneratedCredentials({
@@ -125,21 +101,10 @@ Options:
     const handleDelete = async (leadId) => {
         if (!confirm('⚠️ Are you sure you want to permanently delete this lead? This action cannot be undone.')) return;
 
-<<<<<<< HEAD
         try {
             const data = await deleteLead(leadId);
 
             if (data.ok) {
-=======
-        const token = localStorage.getItem('token');
-        try {
-            const res = await fetch(`https://projectport-8w1j.onrender.com/api/leads/${leadId}`, {
-                method: 'DELETE',
-                headers: { 'Authorization': `Bearer ${token}` }
-            });
-
-            if (res.ok) {
->>>>>>> eda06ec735637dfc147bcd48b585479b88ad17a7
                 loadLeads();
                 setSuccess('✅ Lead deleted successfully');
                 setTimeout(() => setSuccess(''), 3000);
@@ -154,24 +119,10 @@ Options:
     const handleReject = async (leadId) => {
         if (!confirm('Are you sure you want to reject this lead?')) return;
 
-<<<<<<< HEAD
         try {
             const data = await rejectLead(leadId);
 
             if (data.ok) {
-=======
-        const token = localStorage.getItem('token');
-        try {
-            const res = await fetch(`https://projectport-8w1j.onrender.com/api/leads/${leadId}/reject`, {
-                method: 'POST',
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                    'Content-Type': 'application/json'
-                }
-            });
-
-            if (res.ok) {
->>>>>>> eda06ec735637dfc147bcd48b585479b88ad17a7
                 loadLeads();
                 setSuccess('✅ Lead rejected');
                 setTimeout(() => setSuccess(''), 3000);
